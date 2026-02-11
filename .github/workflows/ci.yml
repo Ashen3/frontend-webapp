@@ -24,5 +24,13 @@ jobs:
 
       - name: Basic HTML Validation
         run: |
+          sudo apt-get update
           sudo apt-get install -y tidy
           tidy -errors -q index.html || true
+
+      - name: Notify Slack
+        if: always()
+        run: |
+          curl -X POST -H "Content-type: application/json" \
+          --data "{\"text\":\"GitHub CI Build Status: ${{ job.status }} for repository ${{ github.repository }}\"}" \
+          ${{ secrets.SLACK_WEBHOOK }}
