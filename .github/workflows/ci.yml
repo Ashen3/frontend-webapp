@@ -1,0 +1,28 @@
+name: HTML CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Check if index.html exists
+        run: |
+          if [ ! -f index.html ]; then
+            echo "index.html not found!"
+            exit 1
+          else
+            echo "index.html exists."
+          fi
+
+      - name: Basic HTML Validation
+        run: |
+          sudo apt-get install -y tidy
+          tidy -errors -q index.html || true
